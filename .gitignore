@@ -1,0 +1,4 @@
+.ssh/
+*.out
+__pycache__/
+
