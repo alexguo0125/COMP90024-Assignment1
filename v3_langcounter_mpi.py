@@ -1,6 +1,6 @@
 #Changelog
 #Row 65 & 74: count en-us differently (not using '''code = lang.split("-")[0].lower()''')
-#adding "Byte-offset parallelism" for file chunking, so each process can read from different part of the file
+#adding "parallelism" for file chunking, so each process can read from different part of the file
 
 import time
 import os
