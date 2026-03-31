@@ -3,6 +3,5 @@ datasets/
 __pycache__/
 *.pyc
 venv/
-langcounter_mpi.py
-lang_count_mpi.py
 .DS_Store
+langcounter.py

@@ -1,3 +1,7 @@
+#Changelog
+#Row 65 & 74: count en-us differently (not using '''code = lang.split("-")[0].lower()''')
+#adding "Byte-offset parallelism" for file chunking, so each process can read from different part of the file
+
 import time
 import os
 from mpi4py import MPI
@@ -14,7 +18,7 @@ LANG_NAMES = {
     'uk': 'Ukrainian', 'th': 'Thai', 'nb': 'Norwegian', 'da': 'Danish',
     'ca': 'Catalan', 'is': 'Icelandic', 'lt': 'Lithuanian', 'eo': 'Esperanto',
     'el': 'Greek', 'hu': 'Hungarian', 'cs': 'Czech', 'ro': 'Romanian',
-    'yi': 'Yiddish', 'ak': 'Akan', 'hy': 'Armenian', 'sc': 'Sardinian',
+    'yi': 'Yiddish', 'ak': 'Akan', 'hy': 'Armenian', 'sc': 'Sardinian', 'en-au': 'English', 'zh-cn': 'Chinese'
 }
 
 #import
@@ -41,29 +45,43 @@ mastodon_no_lang = 0
 bluesky_bad_json = 0
 mastodon_bad_json = 0
 
-#Loop counting, data handling (ill formatted json, null language, non-iso codes)
+#Loop counting, data handling using parallelism
 for source, path in [("bluesky", bluesky_path), ("mastodon", mastodon_path)]:
-    with open(path, 'r') as f:
-        for i, line in enumerate(f):
-            if i % size != rank:
-                continue
+    #rank logic
+    file_size = os.path.getsize(path)
+    chunk_size = file_size // size
+    start_offset = rank * chunk_size
+    end_offset = (rank + 1) * chunk_size if rank < size - 1 else file_size
+
+    with open(path, 'rb') as f:
+        f.seek(start_offset)
+        '''if not the first rank, skip the first partial line (it belongs to the previous rank)'''
+        if rank > 0:
+            f.readline()
+
+        while f.tell() < end_offset:
+            line = f.readline()
+            if not line:
+                break
+            
             '''ill formatted json handling'''
             try:
-                rec = json.loads(line)
+                rec = json.loads(line.decode('utf-8'))
             except json.JSONDecodeError:
                 if source == "bluesky":
                    bluesky_bad_json += 1
                 else:
                     mastodon_bad_json += 1
                 continue
+
             '''null language'''
             if source == "bluesky":
                 langs = rec.get("record", {}).get("langs", [])
                 if not langs:
                     bluesky_no_lang += 1
                 for lang in langs:
-                    code = lang.split("-")[0].lower()
-                    if code.isalpha() and 2 <= len(code) <= 3:
+                    code = lang.strip().lower()
+                    if code:
                         bluesky_counter[code] += 1
 
             elif source == "mastodon":
@@ -71,8 +89,8 @@ for source, path in [("bluesky", bluesky_path), ("mastodon", mastodon_path)]:
                 if not lang:
                     mastodon_no_lang += 1
                 if lang:
-                    code = lang.split("-")[0].lower()
-                    if code.isalpha() and 2 <= len(code) <= 3:
+                    code = lang.strip().lower()
+                    if code:
                         mastodon_counter[code] += 1
 
 #Gather and final count
@@ -98,7 +116,7 @@ if rank == 0:
 
 #Time end + print time taken
     elapsed = time.time() - start_time
-    print(f"\nTime taken: {elapsed:.2f} seconds\n")
+    print(f"\nTime taken: {elapsed:.4f} seconds\n")
 
 #Print Formatting
     print(f"{'':=<90}")

@@ -21,4 +21,4 @@ fi
 
 module load mpi4py/3.1.4-Python-3.11.3
 
-mpiexec -n 8 python langcounter_mpi.py
+mpiexec -n 8 python v3_langcounter_mpi.py

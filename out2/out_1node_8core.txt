@@ -1,0 +1,25 @@
+
+The following have been reloaded with a version change:
+  1) zlib/1.2.12 => zlib/1.2.13
+
+
+Bluesky  — Bad JSON: 0 | No language: 641,722
+Mastodon — Bad JSON: 0 | No language: 644,801
+
+Time taken: 170.9015 seconds
+
+==========================================================================================
+#    Mastodon Languages  Frequency of             BlueSky Languages   Frequency of        
+     Used                Occurrence (#posts)      Used                Occurrence (#posts) 
+==========================================================================================
+1    En (English)        22,492,294               En (English)        72,772,745
+2    De (German)         1,635,575                De (German)         2,103,551
+3    Es (Spanish)        385,703                  Es (Spanish)        635,915
+4    Fr (French)         383,728                  Fr (French)         482,958
+5    Zh (Chinese)        289,853                  Pt (Portuguese)     269,539
+6    Nl (Dutch)          221,422                  Pl (Polish)         228,583
+7    Ru (Russian)        189,917                  Ja (Japanese)       227,321
+8    Ja (Japanese)       178,651                  Fi (Finnish)        143,567
+9    It (Italian)        157,979                  En-Au (English)     120,529
+10   Fi (Finnish)        131,992                  Nl (Dutch)          109,243
+==========================================================================================
