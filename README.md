@@ -74,3 +74,10 @@ Install dependencies:
 
 ```bash
 pip install -r requirements.txt
+
+## Key Insights
+
+- Byte-chunking significantly reduces redundant file reading compared to modulo-based distribution
+- 1 node 8 cores achieved optimal performance due to shared-memory advantages
+- Distributed execution (2 nodes) introduces communication overhead that limits scalability
+- The results align with Amdahl’s Law, showing diminishing returns as parallelism increases
