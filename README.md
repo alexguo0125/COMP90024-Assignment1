@@ -74,6 +74,19 @@ Install dependencies:
 
 ```bash
 pip install -r requirements.txt
+```
+
+The baseline scripts expect NDJSON inputs under `datasets/`. Update the input
+paths near the top of the selected script if your files are stored elsewhere,
+then run, for example:
+
+```bash
+python langcounter.py
+```
+
+The MPI variants and SLURM launch scripts are intended for the University of
+Melbourne Spartan environment. Dataset files are not included in this
+repository.
 
 ## Key Insights
 
@@ -81,3 +94,10 @@ pip install -r requirements.txt
 - 1 node 8 cores achieved optimal performance due to shared-memory advantages
 - Distributed execution (2 nodes) introduces communication overhead that limits scalability
 - The results align with Amdahl’s Law, showing diminishing returns as parallelism increases
+
+## Notes
+
+This is an academic project for COMP90024 Cluster and Cloud Computing. The
+repository preserves the implementation, benchmark launch scripts, and output
+summaries so the parallelisation choices can be inspected and reproduced with
+equivalent input data.
